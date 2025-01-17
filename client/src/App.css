@@ -1,0 +1,26 @@
+.parallax {
+  background-image: url("./assets/adobo.jpg");
+}
+
+.feature-icon {
+  background-color: #ff6f61; /* Desired color */
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+}
+.share {
+  -webkit-mask-image: url("../src/assets/recipe-book.png");
+  mask-image: url("../src/assets/recipe-book.png");
+}
+.discover {
+  -webkit-mask-image: url("../src/assets/discover.png");
+  mask-image: url("../src/assets/discover.png");
+}
+.discover {
+  -webkit-mask-image: url("../src/assets/discover.png");
+  mask-image: url("../src/assets/discover.png");
+}
