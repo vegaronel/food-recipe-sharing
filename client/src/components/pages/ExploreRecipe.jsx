@@ -9,23 +9,29 @@ function ExploreRecipe() {
   const [recipe, setRecipe] = useState([]);
   const { scrollYProgress } = useScroll();
 
-  useEffect(() => {
-    const getRecipe = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/recipes");
-        if(!response){
-          throw new Error(`Error: ${response.status}`);
-        }
-        const result = await response.json();
-        setRecipe(result);
-        
-      } catch (error) {
-        console.log("Failed to Fetch");
-      }
+ useEffect(()=>{
 
-    };
-    getRecipe();
-  }, []);
+  const getRecipe = async ()=>{
+
+    try {
+
+      const response = await fetch("http://localhost:3000/api/recipes");
+      if(!response.ok) {
+        console.log("Error");
+      }
+      const result =  await response.json();
+      console.log(result); // Log the result correctly
+      setRecipe(result);
+      
+
+    } catch (error) {
+      console.log("Failed to get data", error);
+    }
+  
+  }
+  getRecipe();
+  
+ },[])
 
   return (
     <div className="pt-5 container max-w-screen-xl mx-auto">
@@ -50,24 +56,24 @@ function ExploreRecipe() {
         <div className="md:col-span-2">
           <div className="bg-white">
             <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4 p-4">
-              {recipe.map((recipe, index) => (
-                <div className="text-start" key={index}>
+              {recipe.map((recipe) => (
+                <div className="text-start" key={recipe.id}>
                   <Link className="pointer" to={"/sample"}>
                     <img
                       className="object-cover rounded h-[500px] w-full"
-                      src={recipe.src}
-                      alt={recipe.alt}
+                      src={recipe.img_url}
+                      alt={recipe.image_alt}
                     />
                   </Link>
-                  <p className="text-heading mt-4">{recipe.type}</p>
+                  <p className="text-heading mt-4">{recipe.recipe_type}</p>
                   <div>
-                    <h1 className="font-serif text-2xl">{recipe.name}</h1>
+                    <h1 className="font-serif text-2xl">{recipe.recipe_name}</h1>
                     <p>{recipe.description}</p>
                     <Separator className="my-4 border-muted border-t-2" />
                     <div className="gap-3 flex items-center">
                       <div className="flex items-center">
                         <Clock4 />
-                        <p className="text-sm">{recipe.timeToCook} minutes</p>
+                        <p className="text-sm">{recipe.time_to_cook} minutes</p>
                       </div>
                       <div className="flex items-center justify-center">
                         <ThumbsUp />
