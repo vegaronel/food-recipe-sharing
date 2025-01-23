@@ -1,5 +1,4 @@
 import passport from 'passport';
-import bcrypt from "bcrypt";
 import User from "../models/user.js";
 
 
@@ -96,7 +95,6 @@ export const logout = (req, res) => {
 export const registerUser = async (req, res) => {
   const { username, email, password, retypePassword, first_name, last_name } = req.body;
   
-
   try {
     if (!username || !password || !email || !retypePassword || !first_name || !last_name) {
       return res.status(400).json({ message: "All fields are required." });
@@ -111,10 +109,6 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ message: "Email already exists." });
     }
 
-    const saltRounds = 10;
-    const hashedPassword = bcrypt.hashSync(password, saltRounds);
-
-    // Use full_name as a derived value if not provided
     const full_name = `${first_name || ''} ${last_name || ''}`.trim();
 
     await User.create({
@@ -123,7 +117,7 @@ export const registerUser = async (req, res) => {
       last_name,
       full_name: full_name,
       email,
-      password: hashedPassword,
+      password,
     });
 
     res.status(201).json({ message: "User registered successfully." });

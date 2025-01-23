@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/card";
 import RegistrationInput from "../inputs/RegistrationInput";
 import { useState } from "react";
+import { Link } from "react-router";
 import axios from "axios";
 
 export default function SignUpForm({ className, ...props }) {
@@ -109,12 +110,11 @@ export default function SignUpForm({ className, ...props }) {
             </div>
             <div className="mt-4 text-center text-sm">
               Already have an account?{" "}
-              <a
-                href="/login"
+              <Link to="/login"
                 className="underline underline-offset-4 hover:text-primary"
               >
                 Log in
-              </a>
+              </Link>
             </div>
           </form>
         </CardContent>
@@ -127,7 +127,7 @@ const formInput = [
   {
     name: "username",
     type: "text",
-    placeholder: "John Doe",
+    placeholder: "johndoe123",
     label: "Username",
   },
   {

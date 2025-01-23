@@ -8,6 +8,8 @@ import userRoutes from "./routes/userRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import passport from "passport";
 import "./config/passport.js"
+import bcrypt from "bcrypt";
+
 import sequelize from "./config/sequelize.js";
   
 const app = express();
@@ -43,7 +45,6 @@ app.use(bodyParser.json());
 
 // CREATE TABLE FOR POSTGRES
 db.createTableIfNotExist();
-
 
 // Routes
 app.use("/api", userRoutes);

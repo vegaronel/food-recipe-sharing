@@ -55,7 +55,7 @@ const createTableIfNotExist = async () => {
       await pool.query(userTableQuery);
       await pool.query(recipeTableQuery);
       }catch(error) {
-        console.log("Table is already existed");
+        
       }
     }catch(error) {
       console.log("Error creating table ", error);

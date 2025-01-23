@@ -6,8 +6,9 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Button } from "@/components/ui/button";
 import { useNavigate } from 'react-router';
 import { Icons } from "@/components/ui/icons";
+import { Link } from "react-router"
 
-function LoginForm({ className, ...props }) {
+function LoginForm({className, ...props }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -29,6 +30,7 @@ function LoginForm({ className, ...props }) {
       );
 
       if (response.data.user) {
+      
         // Handle successful login
         navigate('/dashboard');
         console.log('Logged in successfully:', response.data.user);
@@ -95,9 +97,9 @@ function LoginForm({ className, ...props }) {
           </Button>
           <div className="mt-4 text-center text-sm">
             Don't have an account?{' '}
-            <a href="/signup" className="underline underline-offset-4 hover:text-primary">
+            <Link to="/signup" className="underline underline-offset-4 hover:text-primary">
               Sign up
-            </a>
+            </Link>
           </div>
         </CardContent>
       </Card>

@@ -12,6 +12,7 @@ passport.use(new LocalStrategy(
       if (!user) {
         return done(null, false, { message: 'Incorrect email.' });
       }
+      
       const isMatch = await user.validatePassword(password);
       if (!isMatch) {
         console.log('Password does not match.');
