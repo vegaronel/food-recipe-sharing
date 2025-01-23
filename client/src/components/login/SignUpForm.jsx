@@ -1,60 +1,118 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/card";
+import RegistrationInput from "../inputs/RegistrationInput";
+import { useState } from "react";
+import axios from "axios";
 
 export default function SignUpForm({ className, ...props }) {
+  const [formData, setFormData] = useState({
+    first_name: "",
+    last_name:"",
+    username: "",
+    email: "",
+    password: "",
+    retypePassword: "",
+  });
+
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name]: value });
+    setError(""); // Clear errors on input change
+    setSuccess(false); // Reset success message
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    console.log(formData)
+    // Validate passwords match
+    if (formData.password !== formData.retypePassword) {
+      return setError("Passwords do not match.");
+    }
+
+    try {
+      const response = await axios.post("http://localhost:3000/auth/register", {
+        username: formData.username,
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        email: formData.email,
+        password: formData.password,
+        retypePassword: formData.retypePassword,
+      });
+      
+
+      if (response.status === 201) {
+        setSuccess(true);
+        setError("");
+        setFormData({
+          first_name: "",
+          last_name:"",
+          username: "",
+          email: "",
+          password: "",
+          retypePassword: "",
+        });
+      }
+    } catch (err) {
+      const errorMessage =
+        err.response?.data?.message || "An error occurred. Please try again.";
+      setError(errorMessage);
+      setSuccess(false);
+    }
+  };
+
   return (
     <div className={`flex flex-col gap-6 ${className}`} {...props}>
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Sign Up</CardTitle>
-          <CardDescription>
-            Create an account to get started
-          </CardDescription>
+          <CardDescription>Create an account to get started</CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit}>
+            {/* Error Message */}
+            {error && (
+              <div className="px-4 py-2 text-sm text-red-900 bg-red-200 rounded mb-4">
+                <p>{error}</p>
+              </div>
+            )}
+            {/* Success Message */}
+            {success && (
+              <div className="px-4 py-2 text-sm text-green-900 bg-green-200 rounded mb-4">
+                <p>Registration successful! You can now log in.</p>
+              </div>
+            )}
+
             <div className="flex flex-col gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="name">Name</Label>
-                <Input
-                  id="name"
-                  type="text"
-                  placeholder="John Doe"
-                  required
+              {formInput.map((item, index) => (
+                <RegistrationInput
+                  key={index}
+                  name={item.name}
+                  label={item.label}
+                  type={item.type}
+                  placeholder={item.placeholder}
+                  value={formData[item.name]}
+                  onChanged={handleChange}
                 />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="john@example.com"
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                />
-              </div>
+              ))}
               <Button type="submit" className="w-full">
                 Sign Up
               </Button>
             </div>
             <div className="mt-4 text-center text-sm">
               Already have an account?{" "}
-              <a href="/login" className="underline underline-offset-4 hover:text-primary">
+              <a
+                href="/login"
+                className="underline underline-offset-4 hover:text-primary"
+              >
                 Log in
               </a>
             </div>
@@ -62,6 +120,43 @@ export default function SignUpForm({ className, ...props }) {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
 
+const formInput = [
+  {
+    name: "username",
+    type: "text",
+    placeholder: "John Doe",
+    label: "Username",
+  },
+  {
+    name: "first_name",
+    type: "text",
+    label: "First Name",
+    placeholder: "John",
+  },
+  {
+    name: "last_name",
+    type: "text",
+    label: "Last Name",
+    placeholder: "Doe",
+  },
+  {
+    name: "email",
+    type: "email",
+    placeholder: "john@example.com",
+    label: "Email",
+  },
+  {
+    name: "password",
+    type: "password",
+    label: "Password",
+  },
+  {
+    name: "retypePassword",
+    type: "password",
+    label: "Re-enter Password",
+  },
+ 
+];

@@ -1,4 +1,4 @@
-import { features } from 'process';
+
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -6,6 +6,25 @@ export default {
     content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}"],
   theme: {
   	extend: {
+      animation: {
+        'slide-in': 'slideIn 0.3s ease-out',
+        'fade-in': 'fadeIn 0.5s ease-in-out',
+        'fade-out': 'fadeOut 0.5s ease-in-out',
+      },
+      keyframes: {
+        slideIn: {
+          '0%': { transform: 'translateY(-20px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        fadeOut: {
+          '0%': { opacity: '1' },
+          '100%': { opacity: '0' },
+        },
+      },
 		fontFamily: {
 			sans:['Raleway', 'sans'],
 			serif: ['EB Garamond', 'serif']
