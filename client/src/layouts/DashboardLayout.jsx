@@ -1,16 +1,15 @@
-import React from 'react'
-import DashboardHeader from './DashboardHeader'
-import DashboardFooter from './DashboardFooter'
-import { Outlet } from 'react-router'
+import React from "react";
+import DashboardHeader from "./DashboardHeader";
+import DashboardFooter from "./DashboardFooter";
+
 
 function DashboardLayout() {
   return (
     <div>
-        <DashboardHeader />
-        <Outlet />
-        <DashboardFooter />
+      <DashboardHeader />
+      <DashboardFooter />
     </div>
-  )
+  );
 }
 
-export default DashboardLayout
+export default DashboardLayout;

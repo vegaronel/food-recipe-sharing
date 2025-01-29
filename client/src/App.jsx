@@ -1,8 +1,9 @@
 // App.js
-import React, { useState } from 'react';
+import React from 'react';
+import { AuthProvider } from './components/pages/AuthContext';
+import ProtectedRoute from './components/pages/ProtectedRoute';
 import { Routes, Route } from 'react-router';
 import "./App.css";
-import ProtectedRoute from './components/pages/ProtectedRoute';
 // LAYOUT
 import LandingPageLayout from './layouts/LandingPageLayout';
 import DashboardLayout from './layouts/DashboardLayout';
@@ -16,29 +17,24 @@ import Register from "./components/pages/Register"
 import About from './components/pages/About';
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   return (
+    <AuthProvider>
       <Routes>
         {/* Public Routes */}
         <Route element={<LandingPageLayout />}>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login setAuth={setIsAuthenticated} />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/explore" element={<ExploreRecipe />} />
           <Route path="/signup" element={<Register />} />
           <Route path="/about" element={<About />} />
-          {/* Add more public routes here */}
         </Route>
 
         {/* Protected Routes */}
         <Route element={<DashboardLayout />}>
-          <Route path="/dashboard" element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <Dashboard />
-            </ProtectedRoute>
-            } />
-          {/* Add more dashboard routes here */}
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         </Route>
       </Routes>
+    </AuthProvider>
   );
 }
 

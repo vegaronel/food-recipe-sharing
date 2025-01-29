@@ -30,7 +30,6 @@ function LoginForm({className, ...props }) {
       );
 
       if (response.data.user) {
-      
         // Handle successful login
         navigate('/dashboard');
         console.log('Logged in successfully:', response.data.user);

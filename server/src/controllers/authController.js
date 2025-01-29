@@ -1,16 +1,9 @@
 import passport from 'passport';
 import User from "../models/user.js";
 
-
 export const login = (req, res, next) => {
-  console.log('Login request received with body:', { 
-    email: req.body.email,
-    hasPassword: !!req.body.password 
-  });
-
   passport.authenticate('local', (err, user, info) => {
     if (err) {
-      console.error('Authentication error:', err);
       return res.status(500).json({ 
         success: false,
         message: 'An error occurred during authentication.'
@@ -18,7 +11,6 @@ export const login = (req, res, next) => {
     }
 
     if (!user) {
-      console.log('Authentication failed:', info.message);
       return res.status(401).json({ 
         success: false,
         message: info.message || 'Authentication failed.'
@@ -27,16 +19,12 @@ export const login = (req, res, next) => {
 
     req.logIn(user, (err) => {
       if (err) {
-        console.error('Session error:', err);
         return res.status(500).json({ 
           success: false,
           message: 'Failed to establish session.'
         });
       }
 
-      console.log('User logged in successfully:', user.id);
-      
-      // Return user info (excluding sensitive data)
       const safeUser = {
         id: user.id,
         email: user.email,
@@ -54,7 +42,6 @@ export const login = (req, res, next) => {
     });
   })(req, res, next);
 };
-
 export const getUser = (req, res) => {
   if (req.isAuthenticated()) {
     const user = req.user;
@@ -124,5 +111,14 @@ export const registerUser = async (req, res) => {
   } catch (error) {
     console.error("Error during registration:", error.message);
     res.status(500).json({ message: "Server error.", error: error.message });
+  }
+};
+
+
+export const checkUser = (req, res) => {
+  if (req.isAuthenticated()) {
+    res.json({ authenticated: true });
+  } else {
+    res.json({ authenticated: false });
   }
 };
