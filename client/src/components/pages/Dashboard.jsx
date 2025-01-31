@@ -26,11 +26,6 @@ function Dashboard() {
             <p className="text-gray-600 mt-1">{post.description}</p>
           </div>
 
-          {/* Actions */}
-          <div className="flex justify-between p-4 border-t">
-            <button className="text-blue-500 hover:underline">Edit</button>
-            <button className="text-red-500 hover:underline">Delete</button>
-          </div>
         </div>
       ))}
     </div>
@@ -45,7 +40,7 @@ const samplePosts = [
     id: 1,
     title: "10 React Best Practices for 2024",
     description: "Improve your React skills with these best practices to write clean and efficient code.",
-    image: "https://source.unsplash.com/600x400/?technology,react",
+    image: "https://res.cloudinary.com/unix-center/image/upload/c_limit,dpr_3.0,f_auto,fl_progressive,g_center,h_240,q_auto:good,w_385/penend4bfq6go3arnfsm.jpg",
     author: "John Doe",
     avatar: "https://i.pravatar.cc/40?img=1",
     date: "Jan 15, 2024",
@@ -54,7 +49,7 @@ const samplePosts = [
     id: 2,
     title: "Understanding React Router v6",
     description: "A complete guide to using React Router v6 for navigation in your React applications.",
-    image: "https://source.unsplash.com/600x400/?coding,javascript",
+    image: "https://alexandregames.com/img-MLBB/ling-img/ling-mlbb-1200px.webp",
     author: "Jane Smith",
     avatar: "https://i.pravatar.cc/40?img=2",
     date: "Feb 3, 2024",
@@ -63,7 +58,7 @@ const samplePosts = [
     id: 3,
     title: "State Management in React: Context API vs Redux",
     description: "Learn when to use Context API and when to choose Redux for state management.",
-    image: "https://source.unsplash.com/600x400/?programming,redux",
+    image: "https://salu-salo.com/wp-content/uploads/2015/04/Pork-Adobo-3.jpg",
     author: "Emily Johnson",
     avatar: "https://i.pravatar.cc/40?img=3",
     date: "Feb 10, 2024",
