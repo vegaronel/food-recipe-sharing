@@ -1,29 +1,28 @@
 import pkg from 'pg';
 import dotenv from 'dotenv';
 
-const { Pool } = pkg
+const { Pool } = pkg;
 
 // Load environment variables from .env file
 dotenv.config();
 
-// Create a connection pool
+// Create a connection pool using the Supabase connection URL
 const pool = new Pool({
-  user: process.env.PG_USER,
-  host: process.env.PG_HOST,
-  database: process.env.PG_DATABASE,
-  password: process.env.PG_PASSWORD,
-  port: process.env.PG_PORT || 5432, // Default PostgreSQL port
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false, // Required for Supabase connection
+  },
 });
 
 pool.on('connect', () => {
   console.log('Connected to the database');
 });
 
-
-
+// Function to create tables if they don't exist
 const createTableIfNotExist = async () => {
-  const userTableQuery = `CREATE TABLE users (
-    id SERIAL PRIMARY KEY, 
+  const userTableQuery = `
+    CREATE TABLE IF NOT EXISTS users (
+      id SERIAL PRIMARY KEY, 
       username VARCHAR(250) NOT NULL,
       first_name VARCHAR(250) NOT NULL,
       last_name VARCHAR(250) NOT NULL,
@@ -33,11 +32,11 @@ const createTableIfNotExist = async () => {
       profile_picture TEXT,
       created_at TIMESTAMP DEFAULT NOW(),
       updated_at TIMESTAMP DEFAULT NOW()
-    )`
+    )`;
 
-    const recipeTableQuery = `(
-    CREATE TABLE recipe(
-    id SERIAL PRIMARY KEY,
+  const recipeTableQuery = `
+    CREATE TABLE IF NOT EXISTS recipe (
+      id SERIAL PRIMARY KEY,
       recipe_name VARCHAR(250) NOT NULL,
       recipe_type VARCHAR(200) NOT NULL,
       recipe_description TEXT,
@@ -46,22 +45,19 @@ const createTableIfNotExist = async () => {
       img_url TEXT,
       image_alt TEXT,
       date_upload DATE
-	
-)
-    )`
+    )`;
 
-    try{
-      try{
-      await pool.query(userTableQuery);
-      await pool.query(recipeTableQuery);
-      }catch(error) {
-        
-      }
-    }catch(error) {
-      console.log("Error creating table ", error);
-    }
-}
+  try {
+    await pool.query(userTableQuery);
+    console.log('Users table created or already exists');
+    await pool.query(recipeTableQuery);
+    console.log('Recipe table created or already exists');
+  } catch (error) {
+    console.error('Error creating tables:', error);
+  }
+};
 
+// Export the pool and createTableIfNotExist function
 export default {
   query: (text, params) => pool.query(text, params),
   createTableIfNotExist,
