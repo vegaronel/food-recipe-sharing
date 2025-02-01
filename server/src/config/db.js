@@ -1,21 +1,21 @@
-import pkg from 'pg';
-import dotenv from 'dotenv';
+import pkg from "pg";
+import dotenv from "dotenv";
 
 const { Pool } = pkg;
 
-// Load environment variables from .env file
+// Load environment variables
 dotenv.config();
 
-// Create a connection pool using the Supabase connection URL
+// Create a connection pool
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
-    rejectUnauthorized: false, // Required for Supabase connection
+    rejectUnauthorized: false,
   },
 });
 
-pool.on('connect', () => {
-  console.log('Connected to the database');
+pool.on("connect", () => {
+  console.log("Connected to the database");
 });
 
 // Function to create tables if they don't exist
@@ -49,16 +49,17 @@ const createTableIfNotExist = async () => {
 
   try {
     await pool.query(userTableQuery);
-    console.log('Users table created or already exists');
+    console.log("Users table created or already exists");
     await pool.query(recipeTableQuery);
-    console.log('Recipe table created or already exists');
+    console.log("Recipe table created or already exists");
   } catch (error) {
-    console.error('Error creating tables:', error);
+    console.error("Error creating tables:", error);
   }
 };
 
 // Export the pool and createTableIfNotExist function
 export default {
+  pool,
   query: (text, params) => pool.query(text, params),
   createTableIfNotExist,
 };
