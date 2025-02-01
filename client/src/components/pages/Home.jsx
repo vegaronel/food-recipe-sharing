@@ -3,9 +3,25 @@ import { Separator } from "@/components/ui/separator";
 import { ThumbsUp, Clock4 } from "lucide-react";
 import { Link } from "react-router";
 import { motion, useScroll } from "framer-motion";
+import { useEffect, useState } from "react";
 
 function Home() {
+  const [backend, setBackend] = useState("");
   const { scrollYProgress } = useScroll();
+
+  useEffect(()=> {
+    const fetchBackend = async() => {
+      try{
+        const response = await fetch("https://food-recipe-sharing-y7rl.vercel.app/");
+        console.log(response.json());
+      }catch(error) {
+        setBackend("Error fetching", error);
+        console.log(error)
+      }
+    }
+    
+    fetchBackend();
+  })
 
   return (
     <div>

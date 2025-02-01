@@ -46,7 +46,7 @@ app.use(bodyParser.json());
 db.createTableIfNotExist();
 
 app.get("/", (req,res) => {
-  res.send("WORKING NA POTANG INANG DEPLOY YAN");
+  res.json("WORKING NA POTANG INANG DEPLOY YAN");
 })
 
 // Routes
