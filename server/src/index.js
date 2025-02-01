@@ -57,3 +57,5 @@ sequelize.sync({ force: false }).then(() => {
 }).catch((err) => {
   console.error('Database connection failed:', err.message);
 });
+
+export default app;
