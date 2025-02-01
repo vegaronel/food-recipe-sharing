@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { recipes } from "./data.js";
 import { Separator } from "@/components/ui/separator";
 import { ThumbsUp, Clock4 } from "lucide-react";
@@ -56,32 +56,32 @@ function ExploreRecipe() {
         <div className="md:col-span-2">
           <div className="bg-white">
             <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4 p-4">
-              {recipe.map((recipe) => (
-                <div className="text-start" key={recipe.id}>
-                  <Link className="pointer" to={"/sample"}>
-                    <img
-                      className="object-cover rounded h-[500px] w-full"
-                      src={recipe.img_url}
-                      alt={recipe.image_alt}
-                    />
-                  </Link>
-                  <p className="text-heading mt-4">{recipe.recipe_type}</p>
-                  <div>
-                    <h1 className="font-serif text-2xl">{recipe.recipe_name}</h1>
-                    <p>{recipe.description}</p>
-                    <Separator className="my-4 border-muted border-t-2" />
-                    <div className="gap-3 flex items-center">
-                      <div className="flex items-center">
-                        <Clock4 />
-                        <p className="text-sm">{recipe.time_to_cook} minutes</p>
-                      </div>
-                      <div className="flex items-center justify-center">
-                        <ThumbsUp />
-                        <p className="text-sm">{recipe.difficulty}</p>
+                {recipe.map((recipe) => (
+                  <div className="text-start" key={recipe.id}>
+                    <Link className="pointer" to={"/sample"}>
+                      <img
+                        className="object-cover rounded h-[500px] w-full"
+                        src={recipe.img_url}
+                        alt={recipe.image_alt}
+                      />
+                    </Link>
+                    <p className="text-heading mt-4">{recipe.recipe_type}</p>
+                    <div>
+                      <h1 className="font-serif text-2xl">{recipe.recipe_name}</h1>
+                      <p>{recipe.description}</p>
+                      <Separator className="my-4 border-muted border-t-2" />
+                      <div className="gap-3 flex items-center">
+                        <div className="flex items-center">
+                          <Clock4 />
+                          <p className="text-sm">{recipe.time_to_cook} minutes</p>
+                        </div>
+                        <div className="flex items-center justify-center">
+                          <ThumbsUp />
+                          <p className="text-sm">{recipe.difficulty}</p>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
               ))}
             </div>
           </div>

@@ -1,4 +1,3 @@
-import React from "react";
 import { features, trendRecipe } from "./data";
 import { Separator } from "@/components/ui/separator";
 import { ThumbsUp, Clock4 } from "lucide-react";

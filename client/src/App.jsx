@@ -1,5 +1,3 @@
-// App.js
-import React from 'react';
 import { AuthProvider } from './components/pages/AuthContext';
 import ProtectedRoute from './components/pages/ProtectedRoute';
 import { Routes, Route } from 'react-router';

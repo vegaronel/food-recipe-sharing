@@ -17,7 +17,6 @@ export const AuthProvider = ({ children }) => {
         withCredentials: true,
       });
       if (response.data.authenticated) {
-        navigate("/dashboard");
         setAuth(true);
         localStorage.setItem("auth", "true"); // Store authentication status
       } else {
