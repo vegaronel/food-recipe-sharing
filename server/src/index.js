@@ -45,6 +45,10 @@ app.use(bodyParser.json());
 // CREATE TABLE FOR POSTGRES
 db.createTableIfNotExist();
 
+app.get("/", (req,res) => {
+  res.send("WORKING NA POTANG INANG DEPLOY YAN");
+})
+
 // Routes
 app.use("/api", userRoutes);
 app.use('/auth', authRoutes);
