@@ -11,24 +11,31 @@ function ExploreRecipe() {
 
  useEffect(()=>{
 
-  const getRecipe = async ()=>{
-
+  const getRecipe = async () => {
     try {
-
-      const response = await fetch("http://localhost:3000/api/recipes");
-      if(!response.ok) {
-        console.log("Error");
-      }
-      const result =  await response.json();
-      console.log(result); // Log the result correctly
-      setRecipe(result);
-      
-
-    } catch (error) {
-      console.log("Failed to get data", error);
-    }
+      console.log("Fetching recipes...");
+      const response = await fetch("https://food-recipe-sharing-y7rl.vercel.app/api/recipes", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // Important if using authentication
+      });
   
-  }
+      console.log("Response status:", response.status);
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const result = await response.json();
+      console.log("Fetched recipes:", result);
+      setRecipe(result);
+    } catch (error) {
+      console.error("Failed to fetch recipes:", error);
+    }
+  };
+  
   getRecipe();
   
  },[])
