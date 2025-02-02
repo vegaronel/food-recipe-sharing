@@ -45,13 +45,15 @@ app.use(passport.session());
 // CORS configuration
 app.use(
   cors({
-    origin: [process.env.CLIENT_URL, "https://food-recipe-sharing-y7rl.vercel.app"],
-    credentials: true,
+    origin: ["http://localhost:5173", "https://food-recipe-sharing-y7rl.vercel.app"], // ✅ Add frontend URL
+    credentials: true, // ✅ Allow cookies/sessions
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
+// Handle preflight requests
+app.options('*', cors());
 
 // Body parser middleware
 app.use(express.json());
@@ -70,17 +72,14 @@ app.get("/", (req, res) => {
 app.use("/api", userRoutes);
 app.use("/auth", authRoutes);
 
-// Sync Sequelize and start the server
-sequelize
-  .sync({ force: false })
-  .then(() => {
-    console.log("Database connected.");
-    app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`);
-    });
-  })
-  .catch((err) => {
-    console.error("Database connection failed:", err.message);
-  });
+sequelize.sync({ force: false }).then(() => {
+  console.log("Database connected.");
+}).catch((err) => {
+  console.error("Database connection failed:", err.message);
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
 
 export default app;
