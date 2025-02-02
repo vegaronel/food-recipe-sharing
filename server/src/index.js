@@ -20,20 +20,36 @@ env.config();
 // Initialize session store
 const pgSessionStore = pgSession(session);
 
+// CORS configuration - Move this before session middleware
+const corsOptions = {
+  origin: [
+    "http://localhost:5173",
+    "https://food-recipe-sharing-y7rl.vercel.app",
+    "https://food-recipe-sharing-one.vercel.app"
+  ],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // Handle preflight requests
+
 // Configure session middleware
 app.use(
   session({
     store: new pgSessionStore({
-      pool: db.pool, // Use the existing PostgreSQL pool
-      tableName: "user_sessions", // Optional: Custom table name for sessions
+      pool: db.pool,
+      tableName: "user_sessions",
     }),
     secret: process.env.SESSION_SECRET || "your-secret-key",
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === "production", // Set to true in production
+      secure: process.env.NODE_ENV === "production",
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      sameSite: 'none',
+      maxAge: 24 * 60 * 60 * 1000
     },
   })
 );
@@ -41,19 +57,6 @@ app.use(
 // Initialize Passport
 app.use(passport.initialize());
 app.use(passport.session());
-
-// CORS configuration
-app.use(
-  cors({
-    origin: ["http://localhost:5173", "https://food-recipe-sharing-y7rl.vercel.app"], // ✅ Add frontend URL
-    credentials: true, // ✅ Allow cookies/sessions
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
-
-// Handle preflight requests
-app.options('*', cors());
 
 // Body parser middleware
 app.use(express.json());

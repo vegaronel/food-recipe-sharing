@@ -13,13 +13,14 @@ function ExploreRecipe() {
 
   const getRecipe = async () => {
     try {
-      console.log("Fetching recipes...");
       const response = await fetch("https://food-recipe-sharing-y7rl.vercel.app/api/recipes", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // Important if using authentication
+        credentials: "include",
+        // Add mode: "cors" explicitly
+        mode: "cors"
       });
   
       console.log("Response status:", response.status);
