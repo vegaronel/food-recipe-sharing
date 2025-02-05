@@ -17,16 +17,16 @@ const PORT = process.env.PORT || 3000;
 // Load environment variables
 env.config();
 
-// Initialize session store
-const pgSessionStore = pgSession(session);
-
 // CORS configuration - Move this before session middleware
 const corsOptions = {
   origin: [
+    "http://localhost:3000",
     "http://localhost:5173",
+    "http://localhost:5174",
     "https://food-recipe-sharing-y7rl.vercel.app",
-    "https://food-recipe-sharing-one.vercel.app"
-  ],
+    "https://food-recipe-sharing-one.vercel.app",
+    process.env.CLIENT_URL
+  ].filter(Boolean),
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
@@ -34,6 +34,9 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions)); // Handle preflight requests
+
+// Initialize session store
+const pgSessionStore = pgSession(session);
 
 // Configure session middleware
 app.use(
@@ -71,14 +74,35 @@ app.get("/", (req, res) => {
   res.json("WORKING NA POTANG INANG DEPLOY YAN");
 });
 
+// Logging middleware
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
+  next();
+});
+
 // Routes
-app.use("/api", userRoutes);
-app.use("/auth", authRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/auth", authRoutes); // Mount user routes for recipes
+
+// Catch-all route handler to log unexpected routes
+app.use((req, res, next) => {
+  console.warn(`Unexpected route accessed: ${req.method} ${req.path}`);
+  next();
+});
 
 sequelize.sync({ force: false }).then(() => {
   console.log("Database connected.");
 }).catch((err) => {
   console.error("Database connection failed:", err.message);
+});
+
+// Add a global error handler
+app.use((err, req, res, next) => {
+  console.error('Unhandled error:', err);
+  res.status(500).json({
+    message: 'An unexpected error occurred',
+    error: err.message
+  });
 });
 
 app.listen(PORT, () => {

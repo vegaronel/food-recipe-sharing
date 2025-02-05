@@ -5,5 +5,4 @@ const router = express.Router();
 
 router.get("/recipes", getRecipe);
 
-
 export default router;
