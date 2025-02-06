@@ -24,12 +24,20 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/explore" element={<ExploreRecipe />} />
           <Route path="/signup" element={<Register />} />
+
+          
           <Route path="/about" element={<About />} />
+          
         </Route>
 
         {/* Protected Routes */}
-        <Route element={<DashboardLayout />}>
+        {/* <Route element={<DashboardLayout />}>
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        </Route> */}
+        
+        {/* FOR DEVELOPMENT */}
+        <Route element={<DashboardLayout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
         </Route>
       </Routes>
     </AuthProvider>

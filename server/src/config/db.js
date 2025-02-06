@@ -1,5 +1,6 @@
 import pkg from "pg";
 import dotenv from "dotenv";
+import { updateRecipeUserIds } from "../migrations/update_recipe_user_id.js";
 
 const { Pool } = pkg;
 
@@ -37,49 +38,52 @@ pool.on("error", (err) => {
 
 // Function to create tables if they don't exist
 const createTableIfNotExist = async () => {
-  const userTableQuery = `
-    CREATE TABLE IF NOT EXISTS users (
-      id SERIAL PRIMARY KEY, 
-      username VARCHAR(250) NOT NULL,
-      first_name VARCHAR(250) NOT NULL,
-      last_name VARCHAR(250) NOT NULL,
-      full_name VARCHAR(300),
-      email VARCHAR(250) NOT NULL,
-      password TEXT NOT NULL,
-      profile_picture TEXT,
-      created_at TIMESTAMP DEFAULT NOW(),
-      updated_at TIMESTAMP DEFAULT NOW()
-    )`;
-
-  const recipeTableQuery = `
-    CREATE TABLE IF NOT EXISTS recipe (
-      id SERIAL PRIMARY KEY,
-      recipe_name VARCHAR(250) NOT NULL,
-      recipe_type VARCHAR(200) NOT NULL,
-      recipe_description TEXT,
-      time_to_cook INTEGER,
-      difficulty VARCHAR(20) NOT NULL,
-      img_url TEXT,
-      image_alt TEXT,
-      date_upload TIMESTAMP,
-      created_at TIMESTAMP DEFAULT NOW()
-    )`;
-
-  const userSessionsTableQuery = `
-    CREATE TABLE IF NOT EXISTS user_sessions (
-      sid VARCHAR(255) NOT NULL PRIMARY KEY,
-      sess JSON NOT NULL,
-      expire TIMESTAMP(6) NOT NULL
-    )`;
-
   try {
+    const userTableQuery = `
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY, 
+        username VARCHAR(50) UNIQUE NOT NULL,
+        email VARCHAR(100) UNIQUE NOT NULL,
+        password VARCHAR(255) NOT NULL,
+        full_name VARCHAR(100),
+        profile_picture TEXT,
+        bio TEXT,
+        created_at TIMESTAMP DEFAULT NOW()
+      )`;
+
+    const recipeTableQuery = `
+      CREATE TABLE IF NOT EXISTS recipe (
+        id SERIAL PRIMARY KEY,
+        recipe_name VARCHAR(250) NOT NULL,
+        recipe_type VARCHAR(200) NOT NULL,
+        recipe_description TEXT,
+        time_to_cook INTEGER,
+        difficulty VARCHAR(20) NOT NULL,
+        img_url TEXT,
+        image_alt TEXT,
+        date_upload TIMESTAMP,
+        created_at TIMESTAMP DEFAULT NOW(),
+        user_id INTEGER REFERENCES users(id),
+        uploader_name VARCHAR(300)
+      )`;
+
+    const userSessionsTableQuery = `
+      CREATE TABLE IF NOT EXISTS user_sessions (
+        sid VARCHAR NOT NULL COLLATE "default",
+        sess JSON NOT NULL,
+        expire INTEGER NOT NULL
+      )`;
+
     await pool.query(userTableQuery);
     await pool.query(recipeTableQuery);
     await pool.query(userSessionsTableQuery);
 
-    console.log('All tables created successfully or already exist');
+    // Run migration to update recipe user IDs
+    await updateRecipeUserIds();
+
+    console.log('All tables created successfully and recipes updated');
   } catch (error) {
-    console.error('Error creating tables:', error);
+    console.error('Error creating tables or updating recipes:', error);
   }
 };
 

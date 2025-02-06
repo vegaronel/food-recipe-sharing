@@ -1,5 +1,3 @@
-
-
 /** @type {import('tailwindcss').Config} */
 export default {
     darkMode: ["class"],
@@ -9,7 +7,8 @@ export default {
   		animation: {
   			'slide-in': 'slideIn 0.3s ease-out',
   			'fade-in': 'fadeIn 0.5s ease-in-out',
-  			'fade-out': 'fadeOut 0.5s ease-in-out'
+  			'fade-out': 'fadeOut 0.5s ease-in-out',
+  			'marquee': 'marquee 15s linear infinite',
   		},
   		keyframes: {
   			slideIn: {
@@ -37,6 +36,10 @@ export default {
   				'100%': {
   					opacity: '0'
   				}
+  			},
+  			marquee: {
+  				'0%': { transform: 'translateX(100%)' },
+  				'100%': { transform: 'translateX(-100%)' },
   			}
   		},
   		fontFamily: {

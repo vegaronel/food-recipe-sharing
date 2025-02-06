@@ -50,11 +50,6 @@ function DashboardHeader() {
             <SidebarTrigger />
             <BreadCrumb path={currentPath} />
           </div>
-          <div className="flex items-center ">
-          Search
-            <Input />
-        
-          </div>
         </div>
 
         {/* CONTENT */}
