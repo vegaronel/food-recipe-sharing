@@ -1,26 +1,28 @@
-import { useState, useEffect, useCallback } from "react";
-import MyButton from "../MyButton";
-import MyInput from "../MyInput";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { useRecipePosts } from "@/hooks/useRecipePosts";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import MySkeleton from "../MySkeleton";
+import { useState, useEffect, useCallback } from 'react';
+import MyButton from '../components/MyButton';
+import MyInput from '../components/MyInput';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { useRecipePosts } from '@/hooks/useRecipePosts';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import MySkeleton from '../components/MySkeleton';
 
 function Dashboard() {
-  const { 
-    recipePost, 
-    isLoading, 
-    error, 
-    hasMore, 
-    loadMoreRecipes 
+  const {
+    recipePost,
+    isLoading,
+    error,
+    hasMore,
+    loadMoreRecipes,
+    searchRecipes,
+    searchTerm: currentSearchTerm,
   } = useRecipePosts();
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(currentSearchTerm);
 
   // Infinite scroll handler
   const handleScroll = useCallback(() => {
     if (
-      window.innerHeight + document.documentElement.scrollTop 
-      >= document.documentElement.offsetHeight - 100 // 100px from bottom
+      window.innerHeight + document.documentElement.scrollTop >=
+      document.documentElement.offsetHeight - 100 // 100px from bottom
     ) {
       if (hasMore && !isLoading) {
         loadMoreRecipes();
@@ -34,28 +36,47 @@ function Dashboard() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
 
+  const handleSearch = () => {
+    searchRecipes(searchTerm);
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   if (error) return <div>Error fetching recipes</div>;
 
   return (
     <div className="container mx-auto px-4">
       <div className="flex items-center max-w-2xl mx-auto text-xl py-5">
-        <MyInput 
-          className="rounded-l-lg" 
+        <MyInput
+          className="rounded-l-lg"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyPress={handleKeyPress}
           placeholder="Search recipes..."
         />
-        <MyButton className="rounded-r-lg">Search</MyButton>
+        <MyButton className="rounded-r-lg" onClick={handleSearch}>
+          Search
+        </MyButton>
       </div>
+
+      {recipePost.length === 0 && !isLoading && (
+        <div className="text-center py-4">
+          <p>No recipes found</p>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {recipePost.map((post) => (
           <Card key={post.id} className="hover:shadow-lg transition-shadow duration-300">
             <CardHeader className="flex flex-row items-center space-x-4">
               <Avatar>
-                <AvatarImage 
-                  src={post.user_avatar || "/default-avatar.png"} 
-                  alt={post.username || "User"}
+                <AvatarImage
+                  src={post.user_avatar || '/default-avatar.png'}
+                  alt={post.username || 'User'}
                 />
                 <AvatarFallback>
                   {post.full_name ? post.full_name.charAt(0).toUpperCase() : 'U'}
@@ -63,9 +84,7 @@ function Dashboard() {
               </Avatar>
               <div>
                 <CardTitle>{post.recipe_name}</CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  by {post.username || 'Anonymous'}
-                </p>
+                <p className="text-sm text-muted-foreground">by {post.username || 'Anonymous'}</p>
               </div>
             </CardHeader>
             <CardContent>
@@ -73,9 +92,9 @@ function Dashboard() {
                 {post.recipe_description}
               </p>
               <div className="w-full h-48 overflow-hidden rounded-md">
-                <img 
-                  src={post.img_url} 
-                  alt={post.recipe_name} 
+                <img
+                  src={post.img_url}
+                  alt={post.recipe_name}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -90,11 +109,12 @@ function Dashboard() {
           <>
             <MySkeleton />
             <MySkeleton />
+            <MySkeleton />
           </>
         )}
       </div>
 
-      {!hasMore && (
+      {!hasMore && recipePost.length > 0 && (
         <div className="text-center py-4">
           <p>No more recipes to load</p>
         </div>

@@ -1,13 +1,13 @@
 // Login.js
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router';
-import { Icons } from "@/components/ui/icons";
-import { Link } from "react-router";
+import { Icons } from '@/components/ui/icons';
+import { Link } from 'react-router';
 import { useAuth } from './AuthContext';
 
 export default function Login() {
@@ -18,7 +18,7 @@ export default function Login() {
   const navigate = useNavigate();
   const { setAuth } = useAuth();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     try {
       const response = await axios.post(
@@ -40,7 +40,7 @@ export default function Login() {
     } catch (error) {
       setAuth(false);
       setError('Wrong email or password.');
-      setAnimationKey((prevKey) => prevKey + 1);
+      setAnimationKey(prevKey => prevKey + 1);
     }
   };
 
@@ -51,9 +51,7 @@ export default function Login() {
           <Card>
             <CardHeader>
               <CardTitle className="text-2xl">Login</CardTitle>
-              <CardDescription>
-                Enter your email below to login to your account
-              </CardDescription>
+              <CardDescription>Enter your email below to login to your account</CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit}>
@@ -71,7 +69,7 @@ export default function Login() {
                       type="email"
                       placeholder="m@example.com"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={e => setEmail(e.target.value)}
                     />
                   </div>
                   <div className="grid gap-2">
@@ -82,7 +80,7 @@ export default function Login() {
                       type="password"
                       placeholder="Your password"
                       value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      onChange={e => setPassword(e.target.value)}
                     />
                   </div>
                   <Button type="submit" className="w-full hover:bg-slate-300">

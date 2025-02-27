@@ -1,7 +1,6 @@
-import React from "react";
-import DashboardHeader from "./DashboardHeader";
-import DashboardFooter from "./DashboardFooter";
-
+import React from 'react';
+import DashboardHeader from './DashboardHeader';
+import DashboardFooter from './DashboardFooter';
 
 function DashboardLayout() {
   return (

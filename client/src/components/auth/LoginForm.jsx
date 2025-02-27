@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router';
-import { Icons } from "@/components/ui/icons";
-import { Link } from "react-router"
+import { Icons } from '@/components/ui/icons';
+import { Link } from 'react-router';
 
-function LoginForm({className, ...props }) {
+function LoginForm({ className, ...props }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [animationKey, setAnimationKey] = useState(0); // Key to trigger animation
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     try {
       const response = await axios.post(
@@ -36,7 +36,7 @@ function LoginForm({className, ...props }) {
       }
     } catch (error) {
       setError('Wrong email or password.');
-      setAnimationKey((prevKey) => prevKey + 1); // Update key to retrigger animation
+      setAnimationKey(prevKey => prevKey + 1); // Update key to retrigger animation
     }
   };
 
@@ -45,9 +45,7 @@ function LoginForm({className, ...props }) {
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>
-            Enter your email below to login to your account
-          </CardDescription>
+          <CardDescription>Enter your email below to login to your account</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit}>
@@ -64,7 +62,7 @@ function LoginForm({className, ...props }) {
                   type="email"
                   placeholder="m@example.com"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={e => setEmail(e.target.value)}
                 />
               </div>
               <div className="grid gap-2">
@@ -74,7 +72,7 @@ function LoginForm({className, ...props }) {
                   type="password"
                   placeholder="Your password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={e => setPassword(e.target.value)}
                 />
               </div>
               <Button type="submit" className="w-full hover:bg-slate-300">

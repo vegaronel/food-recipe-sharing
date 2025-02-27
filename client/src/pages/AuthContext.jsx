@@ -1,11 +1,15 @@
-// AuthContext.js
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [auth, setAuth] = useState(false);
+  const navigate = useNavigate();
+  const [auth, setAuth] = useState(() => {
+    // Initialize state from localStorage
+    return localStorage.getItem('auth') === 'true';
+  });
 
   const checkAuth = async () => {
     try {
@@ -14,11 +18,14 @@ export const AuthProvider = ({ children }) => {
       });
       if (response.data.authenticated) {
         setAuth(true);
+        localStorage.setItem('auth', 'true'); // Store authentication status
       } else {
         setAuth(false);
+        localStorage.removeItem('auth'); // Clear authentication if not authenticated
       }
     } catch (error) {
       setAuth(false);
+      localStorage.removeItem('auth');
     }
   };
 

@@ -1,7 +1,7 @@
-import { LightbulbIcon as LucideProps } from "lucide-react"
+import { LightbulbIcon as LucideProps } from 'lucide-react';
 
 export const Icons = {
-  google: (props) => (
+  google: props => (
     <svg role="img" viewBox="0 0 24 24" {...props}>
       <path
         fill="currentColor"
@@ -9,5 +9,4 @@ export const Icons = {
       />
     </svg>
   ),
-}
-
+};

@@ -1,11 +1,7 @@
-import React from 'react'
+import React from 'react';
 
 function RecipeList() {
-  return (
-    <div>
-      
-    </div>
-  )
+  return <div></div>;
 }
 
-export default RecipeList
+export default RecipeList;

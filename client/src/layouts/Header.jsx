@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { cn } from "@/lib/utils"; // Utility function from shadcn/ui
-import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
-import { Link } from "react-router";
-import links from "./links.js";
+import React, { useState } from 'react';
+import { cn } from '@/lib/utils'; // Utility function from shadcn/ui
+import { Button } from '@/components/ui/button';
+import { Menu } from 'lucide-react';
+import { Link } from 'react-router';
+import links from './links.js';
 
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,11 +24,11 @@ function Header() {
           <div className="hidden md:flex space-x-6">
             {links.map((item, index) => (
               <Link
-              key={index}
+                key={index}
                 to={item.href}
                 className={cn(
-                  "text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium",
-                  { "font-semibold": location.pathname === "/" }
+                  'text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium',
+                  { 'font-semibold': location.pathname === '/' }
                 )}
               >
                 {item.name}
@@ -54,7 +54,8 @@ function Header() {
           <div className="md:hidden">
             <div className="space-y-1 px-2 pt-2 pb-3 sm:px-3">
               {links.map((item, index) => (
-                <Link key={index}
+                <Link
+                  key={index}
                   to={item.href}
                   className="block text-gray-600 hover:bg-gray-100 px-3 py-2 rounded-md text-base font-medium"
                 >
@@ -70,4 +71,3 @@ function Header() {
 }
 
 export default Header;
-

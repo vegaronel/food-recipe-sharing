@@ -1,9 +1,9 @@
-import * as React from "react";
-import { Facebook, Twitter, Instagram, Linkedin, Github } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
-import links from "./links";
+import * as React from 'react';
+import { Facebook, Twitter, Instagram, Linkedin, Github } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
+import links from './links';
 
 export default function Footer() {
   return (
@@ -13,8 +13,8 @@ export default function Footer() {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">About Us</h3>
             <p className="text-sm text-muted-foreground">
-              Your go-to platform for discovering, sharing, and saving recipes
-              from all over the world.
+              Your go-to platform for discovering, sharing, and saving recipes from all over the
+              world.
             </p>
           </div>
           <div className="space-y-4">
@@ -42,11 +42,7 @@ export default function Footer() {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Newsletter</h3>
             <form className="flex space-x-2">
-              <Input
-                type="email"
-                placeholder="Your email"
-                className="flex-grow"
-              />
+              <Input type="email" placeholder="Your email" className="flex-grow" />
               <Button type="submit">Subscribe</Button>
             </form>
           </div>
@@ -57,17 +53,11 @@ export default function Footer() {
             © {new Date().getFullYear()} Your Company Name. All rights reserved.
           </div>
           <div className="flex space-x-4">
-            {[Facebook, Twitter, Instagram, Linkedin, Github].map(
-              (Icon, index) => (
-                <a
-                  key={index}
-                  href="#"
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  <Icon size={20} />
-                </a>
-              )
-            )}
+            {[Facebook, Twitter, Instagram, Linkedin, Github].map((Icon, index) => (
+              <a key={index} href="#" className="text-muted-foreground hover:text-foreground">
+                <Icon size={20} />
+              </a>
+            ))}
           </div>
         </div>
       </div>

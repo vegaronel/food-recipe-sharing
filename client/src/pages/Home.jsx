@@ -1,8 +1,8 @@
-import { features, trendRecipe } from "./data";
-import { Separator } from "@/components/ui/separator";
-import { ThumbsUp, Clock4 } from "lucide-react";
-import { Link } from "react-router";
-import { motion, useScroll } from "framer-motion";
+import { features, trendRecipe } from '../utils/data';
+import { Separator } from '@/components/ui/separator';
+import { ThumbsUp, Clock4 } from 'lucide-react';
+import { Link } from 'react-router';
+import { motion, useScroll } from 'framer-motion';
 
 function Home() {
   const { scrollYProgress } = useScroll();
@@ -14,13 +14,13 @@ function Home() {
         id="scroll-indicator"
         style={{
           scaleX: scrollYProgress,
-          position: "fixed",
+          position: 'fixed',
           top: 0,
           left: 0,
           right: 0,
           height: 10,
           originX: 0,
-          backgroundColor: "#FF6F61 ",
+          backgroundColor: '#FF6F61 ',
           zIndex: 50,
         }}
       />
@@ -52,7 +52,7 @@ function Home() {
           <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4 p-4">
             {trendRecipe.map((recipe, index) => (
               <div className="text-start" key={index}>
-                <Link className="pointer" to={"/sample"}>
+                <Link className="pointer" to={'/sample'}>
                   <img
                     className="object-cover rounded h-[700px] w-full"
                     src={recipe.src}
