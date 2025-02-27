@@ -1,6 +1,5 @@
 import pkg from "pg";
 import dotenv from "dotenv";
-import { updateRecipeUserIds } from "../migrations/update_recipe_user_id.js";
 
 const { Pool } = pkg;
 
@@ -78,8 +77,6 @@ const createTableIfNotExist = async () => {
     await pool.query(recipeTableQuery);
     await pool.query(userSessionsTableQuery);
 
-    // Run migration to update recipe user IDs
-    await updateRecipeUserIds();
 
     console.log('All tables created successfully and recipes updated');
   } catch (error) {

@@ -12,7 +12,7 @@ import "./config/passport.js";
 import sequelize from "./config/sequelize.js";
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 // Load environment variables
 env.config();
@@ -20,7 +20,7 @@ env.config();
 // CORS configuration - Move this before session middleware
 const corsOptions = {
   origin: [
-    "http://localhost:3000",
+    "http://localhost:4000",
     "http://localhost:5173",
     "http://localhost:5174",
     "https://food-recipe-sharing-y7rl.vercel.app",
@@ -74,20 +74,37 @@ app.get("/", (req, res) => {
   res.json("WORKING NA POTANG INANG DEPLOY YAN");
 });
 
-// Logging middleware
+// Detailed logging middleware
 app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
+  console.log(`[${new Date().toISOString()}] Incoming Request:`, {
+    method: req.method,
+    path: req.path,
+    headers: req.headers,
+    query: req.query,
+    body: req.body
+  });
   next();
 });
 
 // Routes
-app.use("/api/users", userRoutes);
+app.use("/api/users", (req, res, next) => {
+  console.log('Accessing /api/users routes:', req.path);
+  next();
+}, userRoutes);
 app.use("/api/auth", authRoutes); // Mount user routes for recipes
 
-// Catch-all route handler to log unexpected routes
+// Catch-all route handler with more detailed logging
 app.use((req, res, next) => {
-  console.warn(`Unexpected route accessed: ${req.method} ${req.path}`);
-  next();
+  console.warn(`Unexpected route accessed: ${req.method} ${req.path}`, {
+    headers: req.headers,
+    query: req.query,
+    body: req.body
+  });
+  res.status(404).json({
+    message: 'Route not found',
+    path: req.path,
+    method: req.method
+  });
 });
 
 sequelize.sync({ force: false }).then(() => {
