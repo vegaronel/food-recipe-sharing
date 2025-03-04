@@ -1,4 +1,3 @@
-// Login.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Input } from '@/components/ui/input';
@@ -18,7 +17,7 @@ export default function Login() {
   const navigate = useNavigate();
   const { setAuth } = useAuth();
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post(
@@ -34,13 +33,15 @@ export default function Login() {
 
       if (response.data.user) {
         setAuth(true);
+        localStorage.setItem('auth', JSON.stringify(true)); // Save to localStorage
         navigate('/dashboard');
         console.log('Logged in successfully:', response.data.user);
       }
     } catch (error) {
       setAuth(false);
+      localStorage.removeItem('auth'); // Remove from localStorage on error
       setError('Wrong email or password.');
-      setAnimationKey(prevKey => prevKey + 1);
+      setAnimationKey((prevKey) => prevKey + 1);
     }
   };
 
@@ -69,7 +70,7 @@ export default function Login() {
                       type="email"
                       placeholder="m@example.com"
                       value={email}
-                      onChange={e => setEmail(e.target.value)}
+                      onChange={(e) => setEmail(e.target.value)}
                     />
                   </div>
                   <div className="grid gap-2">
@@ -80,7 +81,7 @@ export default function Login() {
                       type="password"
                       placeholder="Your password"
                       value={password}
-                      onChange={e => setPassword(e.target.value)}
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                   </div>
                   <Button type="submit" className="w-full hover:bg-slate-300">

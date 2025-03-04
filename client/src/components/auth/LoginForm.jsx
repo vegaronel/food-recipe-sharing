@@ -35,7 +35,7 @@ function LoginForm({ className, ...props }) {
         console.log('Logged in successfully:', response.data.user);
       }
     } catch (error) {
-      setError('Wrong email or password.');
+      setError(error);
       setAnimationKey(prevKey => prevKey + 1); // Update key to retrigger animation
     }
   };

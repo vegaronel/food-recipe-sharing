@@ -1,9 +1,10 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useState } from 'react';
-import { Link } from 'react-router';
-import axios from 'axios';
+import { Link, useNavigate } from 'react-router';
 import { Input } from '../ui/input';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Terminal } from 'lucide-react';
 
 export default function SignUpForm({ className, ...props }) {
   const [formData, setFormData] = useState({
@@ -15,37 +16,39 @@ export default function SignUpForm({ className, ...props }) {
     retypePassword: '',
   });
 
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
+  const [message, setMessage] = useState({
+    error: false,
+    success: false,
+  });
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
-    setError(''); // Clear errors on input change
-    setSuccess(false); // Reset success message
+    setMessage({
+      error: '',
+      success: false,
+    });
   };
 
-  const handleSubmit = async event => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+
     console.log(formData);
-    // Validate passwords match
-    if (formData.password !== formData.retypePassword) {
-      return setError('Passwords do not match.');
-    }
-
     try {
-      const response = await axios.post('http://localhost:3000/auth/register', {
-        username: formData.username,
-        first_name: formData.first_name,
-        last_name: formData.last_name,
-        email: formData.email,
-        password: formData.password,
-        retypePassword: formData.retypePassword,
-      });
-
-      if (response.status === 201) {
-        setSuccess(true);
-        setError('');
+      const fetchData = async () => {
+        const URL = import.meta.env.VITE_API_URL;
+        const response = await fetch(`${URL}/api/auth/register`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+  
+        if (!response.ok) {
+          setMessage({ ...message, error: true });
+          return;
+        }
         setFormData({
           first_name: '',
           last_name: '',
@@ -53,15 +56,16 @@ export default function SignUpForm({ className, ...props }) {
           email: '',
           password: '',
           retypePassword: '',
-        });
-      }
-    } catch (err) {
-      const errorMessage = err.response?.data?.message || 'An error occurred. Please try again.';
-      setError(errorMessage);
-      setSuccess(false);
+        })
+        setMessage({ ...message, success: true });
+      };
+      fetchData();
+    } catch (error) {
+      setMessage({ ...message, error: true });
     }
+   
   };
-  
+
   return (
     <div className={`flex flex-col gap-6 ${className}`} {...props}>
       <Card>
@@ -69,21 +73,24 @@ export default function SignUpForm({ className, ...props }) {
           <CardTitle className="text-2xl">Sign Up</CardTitle>
           <CardDescription>Create an account to get started</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
+          {message.success && (
+            <Alert className="gap-2 bg-green-100 text-green-800 border border-green-300">
+              <Terminal className="h-4 w-4" />
+              <AlertTitle>Success</AlertTitle>
+              <AlertDescription>
+                Registration successful. Please login to continue.
+              </AlertDescription>
+            </Alert>
+          )}
+          {message.error && (
+            <Alert className="gap-2 bg-red-100 text-red-800 border border-red-300">
+              <Terminal className="h-4 w-4" />
+              <AlertTitle>Email already in used</AlertTitle>
+              <AlertDescription>Please change the email address.</AlertDescription>
+            </Alert>
+          )}
           <form onSubmit={handleSubmit}>
-            {/* Error Message */}
-            {error && (
-              <div className="px-4 py-2 text-sm text-red-900 bg-red-200 rounded mb-4">
-                <p>{error}</p>
-              </div>
-            )}
-            {/* Success Message */}
-            {success && (
-              <div className="px-4 py-2 text-sm text-green-900 bg-green-200 rounded mb-4">
-                <p>Registration successful! You can now log in.</p>
-              </div>
-            )}
-
             <div className="flex flex-col gap-4">
               {formInput.map((item, index) => (
                 <Input
@@ -142,10 +149,12 @@ const formInput = [
     name: 'password',
     type: 'password',
     label: 'Password',
+    placeholder: 'Enter your password',
   },
   {
     name: 'retypePassword',
     type: 'password',
     label: 'Re-enter Password',
+    placeholder: 'Re-enter your password',
   },
 ];
