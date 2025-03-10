@@ -52,6 +52,15 @@ export default function SignUpForm({ className, ...props }) {
       },
     });
 
+    setFormData({
+      first_name: '',
+      last_name: '',
+      username: '',
+      email: '',
+      password: '',
+      retypePassword: '',
+    })
+
     if (error) {
       setMessage({ error: error.message, success: false });
     } else {
@@ -73,7 +82,7 @@ export default function SignUpForm({ className, ...props }) {
               <Terminal className="h-4 w-4" />
               <AlertTitle>Success</AlertTitle>
               <AlertDescription>
-                Registration successful. Please login to continue.
+                Registration successful. Please check your email for verification.
               </AlertDescription>
             </Alert>
           )}
