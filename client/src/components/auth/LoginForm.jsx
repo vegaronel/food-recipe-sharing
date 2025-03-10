@@ -20,6 +20,9 @@ function LoginForm({ className, ...props }) {
       const { error, data } = await supabase.auth.signInWithPassword({
         email: email,
         password: password,
+        options: {
+          emailRedirectTo: 'https://shareflavor.vercel.app/dashboard',
+        },
       });
 
       if (error) {
