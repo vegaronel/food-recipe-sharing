@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
@@ -7,36 +6,39 @@ import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router';
 import { Icons } from '@/components/ui/icons';
 import { Link } from 'react-router';
+import supabase from '@/helper/supabaseClient';
 
 function LoginForm({ className, ...props }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [animationKey, setAnimationKey] = useState(0); // Key to trigger animation
+  const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        'http://localhost:3000/auth/login',
-        { email, password },
-        {
-          withCredentials: true,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      const { error, data } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
+      });
 
-      if (response.data.user) {
-        // Handle successful login
-        navigate('/dashboard');
-        console.log('Logged in successfully:', response.data.user);
+      if (error) {
+        setMessage(error.message);
+        setPassword("");
+        return;
       }
+
+      if (data) {
+        localStorage.setItem("supabaseAuth", JSON.stringify({ user: data.user , session: data.session }))
+      
+        navigate("/dashboard")
+        console.log(data);
+        setMessage("Success Login");
+        return null
+      }
+  
     } catch (error) {
-      setError(error);
-      setAnimationKey(prevKey => prevKey + 1); // Update key to retrigger animation
+      console.log(error);
     }
   };
 
@@ -48,13 +50,9 @@ function LoginForm({ className, ...props }) {
           <CardDescription>Enter your email below to login to your account</CardDescription>
         </CardHeader>
         <CardContent>
+          {message && <div className={`bg-green-100 text-green-900 p-2 rounded my-2`}>{message}</div>}
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-6">
-              {error && (
-                <div key={animationKey} className="bg-red-200 p-2 rounded animate-slide-in">
-                  <p className="text-red-500">{error}</p>
-                </div>
-              )}
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -62,7 +60,7 @@ function LoginForm({ className, ...props }) {
                   type="email"
                   placeholder="m@example.com"
                   value={email}
-                  onChange={e => setEmail(e.target.value)}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div className="grid gap-2">
@@ -72,7 +70,7 @@ function LoginForm({ className, ...props }) {
                   type="password"
                   placeholder="Your password"
                   value={password}
-                  onChange={e => setPassword(e.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
               <Button type="submit" className="w-full hover:bg-slate-300">

@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router';
 import { Input } from '../ui/input';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Terminal } from 'lucide-react';
+import supabase from '@/helper/supabaseClient';
 
 export default function SignUpForm({ className, ...props }) {
   const [formData, setFormData] = useState({
@@ -17,7 +18,7 @@ export default function SignUpForm({ className, ...props }) {
   });
 
   const [message, setMessage] = useState({
-    error: false,
+    error: '',
     success: false,
   });
 
@@ -33,37 +34,30 @@ export default function SignUpForm({ className, ...props }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    console.log(formData);
-    try {
-      const fetchData = async () => {
-        const URL = import.meta.env.VITE_API_URL;
-        const response = await fetch(`${URL}/api/auth/register`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        });
-  
-        if (!response.ok) {
-          setMessage({ ...message, error: true });
-          return;
-        }
-        setFormData({
-          first_name: '',
-          last_name: '',
-          username: '',
-          email: '',
-          password: '',
-          retypePassword: '',
-        })
-        setMessage({ ...message, success: true });
-      };
-      fetchData();
-    } catch (error) {
-      setMessage({ ...message, error: true });
+    // Check if passwords match
+    if (formData.password !== formData.retypePassword) {
+      setMessage({ error: 'Passwords do not match', success: false });
+      return;
     }
-   
+    // Proceed with sign-up if the email is not in use
+    const { data, error } = await supabase.auth.signUp({
+      email: formData.email,
+      password: formData.password,
+      options: {
+        data: {
+          first_name: formData.first_name,
+          last_name: formData.last_name,
+          username: formData.username,
+        },
+      },
+    });
+
+    if (error) {
+      setMessage({ error: error.message, success: false });
+    } else {
+      setMessage({ error: '', success: true });
+      console.log(data);
+    }
   };
 
   return (
@@ -86,8 +80,8 @@ export default function SignUpForm({ className, ...props }) {
           {message.error && (
             <Alert className="gap-2 bg-red-100 text-red-800 border border-red-300">
               <Terminal className="h-4 w-4" />
-              <AlertTitle>Email already in used</AlertTitle>
-              <AlertDescription>Please change the email address.</AlertDescription>
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>{message.error}</AlertDescription>
             </Alert>
           )}
           <form onSubmit={handleSubmit}>

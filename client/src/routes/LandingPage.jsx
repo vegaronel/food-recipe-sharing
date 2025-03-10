@@ -23,7 +23,6 @@ function LandingPage() {
           <Route path="/signup" element={<Register />} />
           <Route path="*" element={<ErrorLink />} />
         </Route>
-
         
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route

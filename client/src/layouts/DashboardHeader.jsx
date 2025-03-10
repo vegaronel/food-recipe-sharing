@@ -3,8 +3,6 @@ import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/ui/app-sidebar';
 import { Outlet } from 'react-router';
 import { BreadCrumb } from '@/components/BreadCrumb';
-import { Input } from '@/components/ui/input';
-
 function DashboardHeader() {
   const location = useLocation();
 
